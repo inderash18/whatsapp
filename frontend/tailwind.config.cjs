@@ -4,46 +4,49 @@ module.exports = {
     extend: {
       colors: {
         netflix: {
-          black: '#0B0B0B',
-          dark: '#141414',
-          surface: '#1F1F1F',
+          black: '#050505',
+          dark: '#0D0D0D',
+          surface: '#121212',
           red: '#E50914',
           redDark: '#B20710',
+          redGlow: 'rgba(229, 9, 20, 0.4)',
           text: '#FFFFFF',
-          textMuted: '#B3B3B3',
-          received: '#262626',
+          textMuted: '#999999',
+          received: '#1A1A1A',
         }
       },
       borderRadius: {
-        'xl': '12px',
-        '2xl': '16px'
+        'xl': '14px',
+        '2xl': '20px',
+        '3xl': '32px'
+      },
+      boxShadow: {
+        'luxury-red': '0 0 30px rgba(229, 9, 20, 0.2)',
+        'luxury-white': '0 0 30px rgba(255, 255, 255, 0.05)',
       },
       animation: {
-        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'fade-in': 'fadeIn 0.5s ease-out forwards',
-        'slide-up': 'slideUp 0.4s ease-out forwards',
-        'slide-in-right': 'slideInRight 0.3s ease-out forwards',
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'shimmer': 'shimmer 2s linear infinite',
+        'float': 'float 6s ease-in-out infinite',
       },
       keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
         },
-        slideUp: {
-          '0%': { transform: 'translateY(10px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
-        },
-        slideInRight: {
-          '0%': { transform: 'translateX(20px)', opacity: '0' },
-          '100%': { transform: 'translateX(0)', opacity: '1' },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
         }
       },
       backgroundImage: {
-        'netflix-gradient': 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)',
-        'red-gradient': 'linear-gradient(135deg, #E50914 0%, #B20710 100%)',
+        'luxury-gradient': 'linear-gradient(135deg, #0D0D0D 0%, #050505 100%)',
+        'red-gradient': 'linear-gradient(90deg, #E50914 0%, #8E060D 100%)',
+        'card-gradient': 'linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%)',
       }
     }
   },
   plugins: []
 }
+
 

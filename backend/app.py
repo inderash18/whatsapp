@@ -1,7 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from datetime import datetime
@@ -10,6 +11,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Configuration
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
 MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017')
 client = MongoClient(MONGO_URI)
 db = client['chat_app']
@@ -17,12 +25,35 @@ users_col = db['users']
 messages_col = db['messages']
 
 app = Flask(__name__)
+# Enable static file serving for uploads
 CORS(app)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'netflix_secret_key')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 socketio = SocketIO(app, cors_allowed_origins='*', async_mode='eventlet')
 
 # Track online users: {session_id: user_id}
 online_users = {}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route('/api/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+    if file and allowed_file(file.filename):
+        filename = secure_filename(f"{datetime.now().timestamp()}_{file.filename}")
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        file_url = f"http://localhost:5000/uploads/{filename}"
+        return jsonify({'url': file_url})
+    return jsonify({'error': 'File type not allowed'}), 400
 
 @app.route('/api/auth/register', methods=['POST'])
 def register():
@@ -33,7 +64,6 @@ def register():
         'username': data['username'],
         'password': generate_password_hash(data['password']),
         'avatar': data.get('avatar', ''),
-        'last_seen': datetime.utcnow()
     }
     res = users_col.insert_one(user)
     user['_id'] = str(res.inserted_id)
@@ -48,7 +78,6 @@ def login():
         return jsonify({'error': 'Invalid username or password'}), 401
     user['_id'] = str(user['_id'])
     user.pop('password', None)
-    users_col.update_one({'_id': ObjectId(user['_id'])}, {'$set': {'last_seen': datetime.utcnow()}})
     return jsonify(user)
 
 @app.route('/api/users', methods=['GET'])
@@ -58,10 +87,16 @@ def get_users():
         users.append({
             '_id': str(u['_id']),
             'username': u.get('username'),
-            'avatar': u.get('avatar', ''),
-            'last_seen': u.get('last_seen').isoformat() if u.get('last_seen') else None
+            'avatar': u.get('avatar', '')
         })
     return jsonify(users)
+
+# Added a temporary route to clear all data as requested
+@app.route('/api/admin/clear-db', methods=['POST'])
+def clear_db():
+    users_col.delete_many({})
+    messages_col.delete_many({})
+    return jsonify({'status': 'Data cleared successfully'})
 
 @app.route('/api/messages/<user_id>/<peer_id>', methods=['GET'])
 def get_messages(user_id, peer_id):
@@ -79,6 +114,7 @@ def get_messages(user_id, peer_id):
             'sender_id': m['sender_id'],
             'receiver_id': m['receiver_id'],
             'message': m['message'],
+            'type': m.get('type', 'text'),
             'timestamp': m['timestamp'].isoformat()
         })
     return jsonify(output)
@@ -111,6 +147,7 @@ def handle_message(data):
         'sender_id': data['sender_id'],
         'receiver_id': data['receiver_id'],
         'message': data['message'],
+        'type': data.get('type', 'text'),
         'timestamp': now
     }
     res = messages_col.insert_one(msg)

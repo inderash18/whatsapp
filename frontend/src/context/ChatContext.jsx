@@ -97,12 +97,13 @@ export function ChatProvider({ children }) {
     }
   }
 
-  const sendMessage = (text) => {
+  const sendMessage = (text, type = 'text') => {
     if (!socket || !activePeer || !user) return
     const msgData = {
       sender_id: user._id,
       receiver_id: activePeer._id,
-      message: text
+      message: text,
+      type: type
     }
     socket.emit('send_message', msgData)
   }

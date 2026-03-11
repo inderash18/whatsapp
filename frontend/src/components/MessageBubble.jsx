@@ -14,10 +14,21 @@ export default function MessageBubble({ message, isLast }) {
     >
       <div className={`relative max-w-[70%] lg:max-w-[60%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
         <div className={`px-5 py-3.5 rounded-2xl shadow-xl transition-all duration-300 ${isMe
-            ? 'bg-red-gradient text-white rounded-tr-none'
-            : 'bg-netflix-received text-netflix-text rounded-tl-none border border-white/5'
+          ? 'bg-red-gradient text-white rounded-tr-none'
+          : 'bg-netflix-received text-netflix-text rounded-tl-none border border-white/5'
           }`}>
-          <p className="text-[15px] leading-relaxed font-light">{message.message}</p>
+          {message.type === 'image' ? (
+            <motion.img
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              src={message.message}
+              alt="Sent cinematic"
+              className="max-w-full rounded-lg cursor-pointer hover:scale-[1.02] transition-transform"
+              onClick={() => window.open(message.message, '_blank')}
+            />
+          ) : (
+            <p className="text-[15px] leading-relaxed font-light">{message.message}</p>
+          )}
         </div>
 
         <motion.div
