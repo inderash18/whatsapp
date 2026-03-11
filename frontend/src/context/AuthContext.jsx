@@ -42,8 +42,20 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('chat-user')
   }
 
+  const updateProfile = async (avatar) => {
+    try {
+      await api.put('/user/profile', { user_id: user._id, avatar })
+      const newUser = { ...user, avatar }
+      setUser(newUser)
+      localStorage.setItem('chat-user', JSON.stringify(newUser))
+      return newUser
+    } catch (err) {
+      throw err.response?.data?.error || 'Profile update failed'
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, setUser }}>
+    <AuthContext.Provider value={{ user, login, register, logout, setUser, updateProfile }}>
       {children}
     </AuthContext.Provider>
   )

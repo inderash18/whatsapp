@@ -1,25 +1,29 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { motion } from 'framer-motion'
 import { useChat } from '../context/ChatContext'
+import { Pin } from 'lucide-react'
 
-export default function ContactItem({ contact, isActive }) {
+const ContactItem = forwardRef(({ contact, isActive }, ref) => {
   const { selectChat, onlineUsers } = useChat()
   const isOnline = onlineUsers.has(contact._id)
 
   return (
     <motion.div
+      ref={ref}
       layout
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.98 }}
+      whileHover={{ backgroundColor: 'rgba(0,0,0,0.02)' }}
       onClick={() => selectChat(contact)}
-      className={`group relative flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all duration-300 ${isActive
-          ? 'bg-netflix-red/10 border border-netflix-red/20 red-glow'
-          : 'hover:bg-white/5 border border-transparent hover:border-white/5'
+      className={`group relative flex items-center gap-3 p-3.5 rounded-2xl cursor-pointer transition-all duration-300 ${isActive
+          ? 'bg-gray-50/80 shadow-sm'
+          : 'hover:bg-gray-50/30'
         }`}
     >
-      {/* Avatar Container */}
+      {/* Avatar - Smaller & Iconic */}
       <div className="relative">
-        <div className={`w-14 h-14 rounded-2xl overflow-hidden ring-2 transition-all duration-300 ${isActive ? 'ring-netflix-red' : 'ring-transparent'
+        <div className={`w-11 h-11 rounded-full overflow-hidden border-2 transition-all duration-300 ${isActive ? 'border-chat-primary scale-105 shadow-purple' : 'border-transparent'
           }`}>
           <img
             src={contact.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${contact.username}`}
@@ -28,40 +32,32 @@ export default function ContactItem({ contact, isActive }) {
           />
         </div>
         {isOnline && (
-          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-netflix-dark shadow-lg ring-2 ring-green-500/20" />
+          <div className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-[3px] border-white" />
         )}
       </div>
 
-      {/* Info Container */}
+      {/* Info */}
       <div className="flex-1 overflow-hidden">
-        <div className="flex justify-between items-start mb-1">
-          <h4 className={`font-medium text-base transition-colors duration-300 ${isActive ? 'text-white' : 'text-netflix-textMuted group-hover:text-white'
-            }`}>
+        <div className="flex justify-between items-center mb-0.5">
+          <h4 className="font-bold text-chat-text text-sm truncate tracking-tight">
             {contact.username}
+            {Math.random() > 0.8 && <Pin size={10} className="inline ml-1.5 text-chat-primary opacity-40 rotate-45" />}
           </h4>
-          <span className="text-[10px] text-netflix-textMuted uppercase tracking-tighter mt-1">12:45 PM</span>
+          <span className="text-[9px] text-chat-textMuted font-black uppercase tracking-widest opacity-60">09:38 AM</span>
         </div>
         <div className="flex justify-between items-center">
-          <p className="text-sm text-netflix-textMuted truncate font-light">
-            {contact.lastMessage || 'Start a conversation'}
+          <p className={`text-[11px] truncate tracking-tight ${isActive ? 'text-chat-text font-bold' : 'text-chat-textMuted font-medium'}`}>
+            {contact.lastMessage || 'Directing a scene...'}
           </p>
-          {/* Notification badge placeholder */}
           {Math.random() > 0.7 && !isActive && (
-            <div className="min-w-[18px] h-[18px] flex items-center justify-center bg-netflix-red text-[10px] text-white font-bold rounded-full px-1 shadow-[0_0_10px_rgba(229,9,20,0.4)]">
+            <div className="min-w-[16px] h-[16px] flex items-center justify-center bg-chat-primary text-[9px] text-white font-black rounded-full px-1 shadow-purple">
               2
             </div>
           )}
         </div>
       </div>
-
-      {/* Active Indicator Line */}
-      {isActive && (
-        <motion.div
-          layoutId="activeSide"
-          className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-netflix-red rounded-r-full shadow-[2px_0_10px_rgba(229,9,20,0.6)]"
-        />
-      )}
     </motion.div>
   )
-}
+})
 
+export default ContactItem

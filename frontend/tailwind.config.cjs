@@ -3,50 +3,43 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        netflix: {
-          black: '#050505',
-          dark: '#0D0D0D',
-          surface: '#121212',
-          red: '#E50914',
-          redDark: '#B20710',
-          redGlow: 'rgba(229, 9, 20, 0.4)',
-          text: '#FFFFFF',
-          textMuted: '#999999',
-          received: '#1A1A1A',
+        chat: {
+          primary: '#6C63FF',
+          primaryDark: '#5A52E0',
+          bg: '#F8F9FE',
+          sidebar: '#FFFFFF',
+          text: '#1A1A1A',
+          textMuted: '#9BA1B7',
+          received: '#FFFFFF',
+          sent: 'rgba(255, 255, 255, 0.15)',
+          purpleBg: '#5A52E0'
         }
       },
       borderRadius: {
-        'xl': '14px',
-        '2xl': '20px',
-        '3xl': '32px'
+        'xl': '16px',
+        '2xl': '24px',
+        '3xl': '40px'
       },
       boxShadow: {
-        'luxury-red': '0 0 30px rgba(229, 9, 20, 0.2)',
-        'luxury-white': '0 0 30px rgba(255, 255, 255, 0.05)',
+        'soft': '0 10px 40px rgba(0, 0, 0, 0.04)',
+        'purple': '0 10px 30px rgba(108, 99, 255, 0.2)',
       },
       animation: {
-        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'shimmer': 'shimmer 2s linear infinite',
-        'float': 'float 6s ease-in-out infinite',
+        'float': 'float 3s ease-in-out infinite',
       },
       keyframes: {
-        shimmer: {
-          '0%': { backgroundPosition: '-200% 0' },
-          '100%': { backgroundPosition: '200% 0' },
-        },
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
+          '50%': { transform: 'translateY(-5px)' },
         }
       },
       backgroundImage: {
-        'luxury-gradient': 'linear-gradient(135deg, #0D0D0D 0%, #050505 100%)',
-        'red-gradient': 'linear-gradient(90deg, #E50914 0%, #8E060D 100%)',
-        'card-gradient': 'linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%)',
+        'purple-gradient': 'linear-gradient(135deg, #6C63FF 0%, #4B44D4 100%)',
       }
     }
   },
   plugins: []
 }
+
 
 

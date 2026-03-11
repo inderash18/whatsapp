@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
-import { MessageSquare, ShieldCheck, Zap } from 'lucide-react'
+import { MessageCircle, ShieldCheck, Zap, ArrowRight, Star } from 'lucide-react'
 
 export default function Login() {
   const [username, setUsername] = useState('')
@@ -14,7 +14,7 @@ export default function Login() {
 
   const handleAuth = async (isLogin) => {
     if (!username || !password) {
-      setError('Please fill in all fields')
+      setError('Please provide your credentials')
       return
     }
     setError('')
@@ -34,111 +34,103 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen w-full cinematic-bg flex items-center justify-center p-6 bg-netflix-black relative overflow-hidden">
-      {/* Cinematic Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-full">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-netflix-red/5 rounded-full blur-[150px] animate-pulse-slow" />
-      </div>
+    <div className="min-h-screen w-full bg-[#F8F9FE] flex items-center justify-center p-6 relative overflow-hidden">
+      {/* Decorative Elements */}
+      <div className="absolute -top-20 -left-20 w-80 h-80 bg-chat-primary/5 rounded-full blur-[100px]" />
+      <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-chat-primary/10 rounded-full blur-[120px]" />
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="w-full max-w-[450px] relative z-10"
+        transition={{ duration: 0.8 }}
+        className="w-full max-w-[480px] relative z-10"
       >
         <div className="text-center mb-10">
           <motion.div
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
-            className="flex items-center justify-center gap-3 mb-4"
+            className="w-20 h-20 bg-chat-primary rounded-[32px] flex items-center justify-center shadow-purple mx-auto mb-6"
           >
-            <div className="bg-netflix-red p-2.5 rounded-2xl shadow-[0_0_20px_rgba(229,9,20,0.5)]">
-              <MessageSquare className="text-white" size={32} />
-            </div>
-            <h1 className="text-4xl font-black text-netflix-red tracking-tighter">CHATFLIX</h1>
+            <MessageCircle className="text-white" size={40} />
           </motion.div>
-          <p className="text-netflix-textMuted font-light tracking-widest uppercase text-xs">Premium Messaging Experience</p>
+          <h1 className="text-4xl font-black text-chat-text tracking-tight mb-2">Purple Messenger</h1>
+          <p className="text-chat-textMuted font-medium text-sm">Experience the modern way of connecting.</p>
         </div>
 
-        <div className="glass-morphism rounded-[32px] p-10 border-white/10 shadow-2xl relative">
-          <h2 className="text-2xl font-bold text-white mb-8">Sign In</h2>
+        <div className="bg-white rounded-[40px] p-12 shadow-soft border border-gray-50 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4">
+            <Star size={24} className="text-chat-primary/10" />
+          </div>
 
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             {error && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="mb-6 p-4 bg-netflix-red/10 border border-netflix-red/20 rounded-xl text-netflix-red text-sm"
+                className="mb-8 p-4 bg-red-50 border border-red-100 rounded-2xl text-red-500 text-xs font-bold uppercase tracking-widest text-center"
               >
                 {error}
               </motion.div>
             )}
           </AnimatePresence>
 
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-            <div className="space-y-1.5 group">
-              <label className="text-[11px] font-bold text-netflix-textMuted uppercase tracking-wider ml-1 group-focus-within:text-netflix-red transition-colors">Username</label>
+          <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-chat-textMuted uppercase tracking-widest ml-1">Username</label>
               <input
                 value={username}
                 onChange={e => setUsername(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 text-white px-5 py-4 rounded-2xl outline-none focus:border-netflix-red/50 focus:ring-4 focus:ring-netflix-red/10 transition-all font-light"
-                placeholder="Enter your username"
+                className="w-full bg-gray-50 border border-transparent text-chat-text px-6 py-5 rounded-3xl outline-none focus:bg-white focus:border-chat-primary/30 transition-all font-semibold placeholder:text-chat-textMuted/30"
+                placeholder="Enter workspace name"
               />
             </div>
 
-            <div className="space-y-1.5 group">
-              <label className="text-[11px] font-bold text-netflix-textMuted uppercase tracking-wider ml-1 group-focus-within:text-netflix-red transition-colors">Password</label>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-chat-textMuted uppercase tracking-widest ml-1">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 text-white px-5 py-4 rounded-2xl outline-none focus:border-netflix-red/50 focus:ring-4 focus:ring-netflix-red/10 transition-all font-light"
-                placeholder="Enter your password"
+                className="w-full bg-gray-50 border border-transparent text-chat-text px-6 py-5 rounded-3xl outline-none focus:bg-white focus:border-chat-primary/30 transition-all font-semibold placeholder:text-chat-textMuted/30"
+                placeholder="Secure your access"
               />
             </div>
 
-            <div className="pt-4 space-y-4">
+            <div className="pt-4 grid grid-cols-2 gap-4">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleAuth(true)}
                 disabled={loading}
-                className="w-full bg-netflix-red text-white py-4 rounded-2xl font-bold text-lg shadow-[0_4px_20px_rgba(229,9,20,0.4)] hover:shadow-[0_4px_30px_rgba(229,9,20,0.6)] transition-all flex items-center justify-center gap-2"
+                className="bg-chat-primary text-white py-5 rounded-3xl font-black text-xs uppercase tracking-widest shadow-purple transition-all flex items-center justify-center gap-2"
               >
-                {loading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : 'Login'}
+                {loading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : 'Sign In'}
+                {!loading && <ArrowRight size={16} />}
               </motion.button>
 
               <button
                 onClick={() => handleAuth(false)}
-                className="w-full bg-white/5 text-white py-4 rounded-2xl font-medium hover:bg-white/10 transition-colors border border-white/5"
+                className="w-full bg-gray-50 text-chat-textMuted py-5 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-gray-100 transition-all"
               >
-                Create Account
+                Join Now
               </button>
             </div>
           </form>
 
-          <div className="mt-8 pt-8 border-t border-white/5 grid grid-cols-3 gap-4">
-            <div className="text-center">
-              <ShieldCheck className="mx-auto text-netflix-textMuted mb-2" size={18} />
-              <p className="text-[10px] text-netflix-textMuted uppercase font-bold">Secure</p>
+          <footer className="mt-12 pt-8 border-t border-gray-50 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ShieldCheck size={16} className="text-chat-primary" />
+              <span className="text-[10px] font-bold text-chat-textMuted uppercase tracking-widest">End-to-End Encryption</span>
             </div>
-            <div className="text-center">
-              <Zap className="mx-auto text-netflix-textMuted mb-2" size={18} />
-              <p className="text-[10px] text-netflix-textMuted uppercase font-bold">Fast</p>
-            </div>
-            <div className="text-center">
-              <MessageSquare className="mx-auto text-netflix-textMuted mb-2" size={18} />
-              <p className="text-[10px] text-netflix-textMuted uppercase font-bold">Private</p>
-            </div>
-          </div>
+            <p className="text-[10px] font-bold text-chat-textMuted uppercase tracking-widest">v2.4.0</p>
+          </footer>
         </div>
 
-        <p className="mt-8 text-center text-netflix-textMuted text-xs font-light">
-          This is a premium demonstration and does not use real billing.
+        <p className="mt-10 text-center text-chat-textMuted font-bold text-[10px] uppercase tracking-[0.3em]">
+          Inspired by Modern Larry Machigo Design
         </p>
       </motion.div>
     </div>
   )
 }
-

@@ -51,7 +51,7 @@ def upload_file():
     if file and allowed_file(file.filename):
         filename = secure_filename(f"{datetime.now().timestamp()}_{file.filename}")
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        file_url = f"http://localhost:5000/uploads/{filename}"
+        file_url = f"{request.host_url}uploads/{filename}"
         return jsonify({'url': file_url})
     return jsonify({'error': 'File type not allowed'}), 400
 
@@ -97,6 +97,16 @@ def clear_db():
     users_col.delete_many({})
     messages_col.delete_many({})
     return jsonify({'status': 'Data cleared successfully'})
+
+@app.route('/api/user/profile', methods=['PUT'])
+def update_profile():
+    data = request.json
+    user_id = data.get('user_id')
+    avatar = data.get('avatar')
+    if not user_id:
+        return jsonify({'error': 'User ID required'}), 400
+    users_col.update_one({'_id': ObjectId(user_id)}, {'$set': {'avatar': avatar}})
+    return jsonify({'status': 'Profile updated successfully'})
 
 @app.route('/api/messages/<user_id>/<peer_id>', methods=['GET'])
 def get_messages(user_id, peer_id):
